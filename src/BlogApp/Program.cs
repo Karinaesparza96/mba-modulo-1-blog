@@ -1,10 +1,5 @@
-using Microsoft.AspNetCore.Identity;
-using BlogCore.Data.Context;
-using BlogCore.Configuration;
 using BlogApp.Configuration;
-using BlogCore.Business.Notificacoes;
-using BlogCore.Business.Interfaces;
-using BlogCore.Business.Services;
+using BlogApp.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,17 +7,14 @@ builder.Services.AddDbContextConfiguration(builder.Configuration);
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<AppDbContext>();
+builder.Services.AddIdentity();
 
-builder.Services.AddAutoMapperConfiguration();
-
-builder.Services.AddScoped<INotificador, Notificador>();
-builder.Services.AddScoped<IPostService, PostService>();
-builder.Services.AddScoped<IAutorService, AutorService>();
+builder.Services.ResolveDependencieInjection();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
+
+builder.Services.AddAutoMapper();
 
 var app = builder.Build();
 

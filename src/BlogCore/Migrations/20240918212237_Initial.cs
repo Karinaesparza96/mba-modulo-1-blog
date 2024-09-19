@@ -162,6 +162,9 @@ namespace BlogCore.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    NomeCompleto = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Biografia = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DataNascimento = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UsuarioId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataAtualizacao = table.Column<DateTime>(type: "datetime2", nullable: false)

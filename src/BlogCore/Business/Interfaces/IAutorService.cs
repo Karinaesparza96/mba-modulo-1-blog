@@ -4,6 +4,8 @@ namespace BlogCore.Business.Interfaces
 {
     public interface IAutorService
     {
-        Task Criar(Autor autor,string userId);
+        Task Adicionar(Autor autor,string userId);
+        Task<Autor?> ObterPorId(int id);
+        Task Atualizar(Autor autor,string userId);
     }
 }

@@ -2,16 +2,17 @@
 
 @{
     ViewData["Title"] = "Novo";
+    var messages = TempData["Messages"] as List<string>;
 }
 
 <div class="row">
     <div class="col-md-4">
         <div>
-            @if (@ViewBag.Messages != null)
+            @if (messages != null)
             {
-                @foreach (var msg in @ViewBag.Messages)
+                foreach (var msg in messages)
                 {
-                    <span class="text-danger">@msg</span>
+                    <span class="text-danger">@msg</span>;
                 }
             }
         </div>

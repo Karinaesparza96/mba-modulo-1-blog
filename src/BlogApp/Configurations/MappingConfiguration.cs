@@ -4,9 +4,9 @@ using BlogCore.Business.Models;
 
 namespace BlogApp.Configurations
 {
-    public class AutoMapperConfiguration : Profile
+    public class MappingConfiguration : Profile
     {
-        public AutoMapperConfiguration()
+        public MappingConfiguration()
         {
             CreateMap<PostViewModel, Post>()
                 .ForMember(dest => dest.DataCadastro, opt => opt.MapFrom(src => src.DataPublicacao))

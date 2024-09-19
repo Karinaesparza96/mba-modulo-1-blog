@@ -2,7 +2,6 @@
 using BlogApp.ViewsModels;
 using BlogCore.Business.Interfaces;
 using BlogCore.Business.Models;
-using BlogCore.Business.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -11,10 +10,14 @@ namespace BlogApp.Controllers
 {
     [Route("posts")]   
     
-    public class PostsController(IPostService postsService, IMapper mapper, INotificador notificador) : MainController(notificador)
+    public class PostsController(IPostService postsService, 
+                                IMapper mapper, 
+                                INotificador notificador,
+                                IAppIdentityUser userApp) : MainController(notificador)
     {
         private readonly IPostService _postService = postsService;
         private readonly IMapper _mapper = mapper;
+        private readonly IAppIdentityUser _userApp = userApp;
 
 
         [HttpGet("")]
@@ -72,7 +75,7 @@ namespace BlogApp.Controllers
                 return CustomResponse();
             }
 
-            var usuarioAutorizado = UsuarioAutorizado(post.Autor);
+            var usuarioAutorizado = post.Autor.UsuarioId == _userApp.GetUserId() || _userApp.IsAdmin();
 
             if (!usuarioAutorizado)
             {
@@ -88,7 +91,7 @@ namespace BlogApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return CustomResponse(postViewModel);
+                return View(postViewModel);
             }
 
             if (id != postViewModel.Id)
@@ -105,7 +108,7 @@ namespace BlogApp.Controllers
                 return CustomResponse(postViewModel);
             }
 
-            var usuarioAutorizado = UsuarioAutorizado(post.Autor);
+            var usuarioAutorizado = post.Autor.UsuarioId == _userApp.GetUserId() || _userApp.IsAdmin();
 
             if (!usuarioAutorizado)
             {
@@ -115,9 +118,9 @@ namespace BlogApp.Controllers
 
             await _postService.Atualizar(id, _mapper.Map<Post>(postViewModel));
 
-            if (OperacaoValida()) return RedirectToAction(nameof(Index));
+            if (!OperacaoValida()) return CustomResponse(postViewModel);
 
-            return CustomResponse(postViewModel);
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet("excluir/{id:int}")]

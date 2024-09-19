@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240916215132_Initial")]
+    [Migration("20240918212237_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -33,11 +33,20 @@ namespace BlogCore.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Biografia")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("DataAtualizacao")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DataCadastro")
                         .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DataNascimento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NomeCompleto")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UsuarioId")
                         .HasColumnType("nvarchar(450)");

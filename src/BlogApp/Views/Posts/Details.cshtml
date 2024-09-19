@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Details";
+    var messages = TempData["Messages"] as List<string>;
 }
 
 <h1>Details</h1>
@@ -10,9 +11,9 @@
     <h4>Post</h4>
     <hr />
     <div class="row">
-        @if (@ViewBag.Messages != null)
+        @if (messages != null)
         {
-            @foreach (var msg in @ViewBag.Messages)
+            @foreach (var msg in messages)
             {
                 <span class="text-danger">@msg</span>
             }
@@ -35,7 +36,7 @@
             @Html.DisplayNameFor(model => model.Autor)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Autor.Nome)
+            @Html.DisplayFor(model => model.Autor.NomeCompleto)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.DataPublicacao)
