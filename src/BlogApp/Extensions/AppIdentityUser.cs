@@ -25,5 +25,12 @@ namespace BlogApp.Extensions
         {
             return _accessor.HttpContext?.User.IsInRole("Admin") ?? false;
         }
+
+        public bool IsAuthorized(string? userId)
+        {
+            if (string.IsNullOrEmpty(userId)) return false;
+
+            return userId == GetUserId() || IsAdmin();
+        }
     }
 }

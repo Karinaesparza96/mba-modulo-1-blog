@@ -1,0 +1,17 @@
+﻿@model IEnumerable<ComentarioViewModel>
+@{
+    var novoComentario = new ComentarioViewModel { PostId = (long)ViewData["PostId"] };
+}
+<h3>Comentarios</h3>
+<section>
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var comentario in Model)
+        {
+            <partial name="_ComentarioDetailsPartial" model="comentario" />
+        }
+    }
+    <div>
+     <partial name="_ComentarioCreatePartial" model="novoComentario" />
+    </div>
+</section>

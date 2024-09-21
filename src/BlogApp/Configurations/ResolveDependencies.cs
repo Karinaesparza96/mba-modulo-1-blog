@@ -9,12 +9,12 @@ namespace BlogApp.Configurations
     {
         public static IServiceCollection ResolveDependencieInjection(this IServiceCollection services)
         {
+            services.AddScoped<IAppIdentityUser, AppIdentityUser>();
+            services.AddScoped<IPostService, PostService>();
+            services.AddScoped<IComentarioService, ComentarioService>();
             services.AddScoped<INotificador, Notificador>();
 
-            services.AddScoped<IPostService, PostService>();
-            services.AddScoped<IAutorService, AutorService>();
 
-            services.AddScoped<IAppIdentityUser, AppIdentityUser>();
 
             return services;
         }

@@ -1,4 +1,5 @@
 ﻿using BlogCore.Business.Interfaces;
+using BlogCore.Business.MessagesDefault;
 using BlogCore.Business.Models;
 using BlogCore.Business.Notificacoes;
 using BlogCore.Data.Context;
@@ -6,41 +7,43 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlogCore.Business.Services
 {
-    public class PostService(AppDbContext db, INotificador notificador) : IPostService
+    public class PostService(AppDbContext db, 
+                            INotificador notificador, 
+                            IAppIdentityUser userApp) : IPostService
     {
         private readonly AppDbContext _context = db;
         private readonly INotificador _notificador = notificador;
-
-        public async Task<Post?> ObterPorId(int id)
+        private readonly IAppIdentityUser _userApp = userApp;
+    
+        public async Task<Post?> ObterPorId(long id)
         {
             var post = await _context.Posts
                             .Include(p => p.Autor)
+                            .ThenInclude(a => a.Usuario)
                             .Include(p => p.Comentarios)
                             .FirstOrDefaultAsync(p => p.Id == id);
-
             return post ?? null;
         }
         public async Task<IEnumerable<Post>> ObterTodos()
         {   
             var posts = await _context.Posts
                             .Include(p => p.Autor)
+                            .ThenInclude(a => a.Usuario)
                             .Include(p => p.Comentarios)
                             .OrderBy(p => p.DataCadastro)
                             .ToListAsync();
-
             return posts;
         }
 
         public async Task Adicionar(Post post, string? userId)
         {
-            var autor = await _context.Autores.FirstOrDefaultAsync(a => a.UsuarioId == userId);
+            var autor = await ObterAutorPorIdUsuario(userId);
 
             if (autor == null)
             {
-                _notificador.Adicionar(new Notificacao("Seu usuário não possui um Autor associado."));
-                return;
-            };
-
+                autor = new Autor { UsuarioId = userId };
+                await _context.Autores.AddAsync(autor);
+            }
             post.Autor = autor;
 
             await _context.Posts.AddAsync(post);
@@ -48,11 +51,23 @@ namespace BlogCore.Business.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task Atualizar(int id, Post post)
+        public async Task Atualizar(Post post)
         {
-            var postExiste = await _context.Posts.FindAsync(id);
+            var postExiste = await ObterPostComAutor(post.Id);
 
-            if (postExiste == null) return;
+            if (postExiste == null) 
+            { 
+                _notificador.Adicionar(new Notificacao(Messages.RegistroNaoEncontrado));
+                return;
+            };
+
+            var usuarioAutorizado = _userApp.IsAuthorized(postExiste.Autor.UsuarioId);
+
+            if (!usuarioAutorizado)
+            {
+                _notificador.Adicionar(new Notificacao(Messages.AcaoRestritaAutorOuAdmin));
+                return;
+            }
 
             postExiste.Titulo = post.Titulo;
             postExiste.Conteudo = post.Conteudo;
@@ -61,14 +76,38 @@ namespace BlogCore.Business.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task Remover(int id)
+        public async Task Remover(long id)
         {
             var post = await _context.Posts.FindAsync(id);
 
-            if (post == null) return;
+            if (post == null)
+            {
+                _notificador.Adicionar(new Notificacao(Messages.RegistroNaoEncontrado));
+                return;
+            }
+            var usuarioAutorizado = _userApp.IsAuthorized(post.Autor.UsuarioId);
+
+            if (!usuarioAutorizado)
+            {
+                _notificador.Adicionar(new Notificacao(Messages.AcaoRestritaAutorOuAdmin));
+                return;
+            }
 
             _context.Posts.Remove(post);
             await _context.SaveChangesAsync();
+        }
+
+        private async Task<Autor?> ObterAutorPorIdUsuario(string userId)
+        {
+            return await _context.Autores.FirstOrDefaultAsync(a => a.UsuarioId == userId);
+        }
+
+        private async Task<Post?> ObterPostComAutor(long id)
+        {
+            return await _context.Posts
+                .Include(p => p.Autor)
+                .ThenInclude(a => a.Usuario)
+                .FirstOrDefaultAsync(a => a.Id == id);
         }
     }
 }

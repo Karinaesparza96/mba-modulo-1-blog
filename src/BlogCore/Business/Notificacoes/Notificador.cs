@@ -20,5 +20,10 @@ namespace BlogCore.Business.Notificacoes
             return _notificacaos.Count != 0;
         }
 
+        public bool ContemNotificacao(string mensagem)
+        {
+            return _notificacaos.Exists(x => x.Mensagem == mensagem);
+        }
+
     }
 }

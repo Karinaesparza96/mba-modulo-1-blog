@@ -1,8 +1,6 @@
 ﻿using BlogCore.Business.Interfaces;
-using BlogCore.Business.Models;
 using BlogCore.Business.Notificacoes;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace BlogApp.Controllers
 {
@@ -18,7 +16,7 @@ namespace BlogApp.Controllers
         {
             if (!OperacaoValida())
             {
-                ViewBag.Messages = _notificador.ObterNotificacoes().Select(msg => msg.Mensagem);
+               ViewBag.Messages = _notificador.ObterNotificacoes().Select(msg => msg.Mensagem);
             }
 
             return View(model);
@@ -27,11 +25,6 @@ namespace BlogApp.Controllers
         protected bool OperacaoValida()
         {
             return !_notificador.TemNotificacao();
-        }
-
-        protected bool UsuarioAutorizado(Autor autor)
-        {
-            return autor.UsuarioId == User.FindFirst(ClaimTypes.NameIdentifier)?.Value || User.IsInRole("Admin");
         }
     }
 }

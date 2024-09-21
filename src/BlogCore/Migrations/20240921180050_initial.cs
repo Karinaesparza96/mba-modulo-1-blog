@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BlogCore.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,10 +15,10 @@ namespace BlogCore.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Id = table.Column<string>(type: "varchar(100)", nullable: false),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "varchar(100)", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "varchar(100)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -29,16 +29,16 @@ namespace BlogCore.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Id = table.Column<string>(type: "varchar(100)", nullable: false),
+                    UserName = table.Column<string>(type: "varchar(100)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "varchar(100)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "varchar(100)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "varchar(100)", maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PasswordHash = table.Column<string>(type: "varchar(100)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "varchar(100)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "varchar(100)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "varchar(100)", nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
@@ -56,9 +56,9 @@ namespace BlogCore.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    RoleId = table.Column<string>(type: "varchar(100)", nullable: false),
+                    ClaimType = table.Column<string>(type: "varchar(100)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "varchar(100)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -77,9 +77,9 @@ namespace BlogCore.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    UserId = table.Column<string>(type: "varchar(100)", nullable: false),
+                    ClaimType = table.Column<string>(type: "varchar(100)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "varchar(100)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -96,10 +96,10 @@ namespace BlogCore.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    LoginProvider = table.Column<string>(type: "varchar(100)", maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(type: "varchar(100)", maxLength: 128, nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "varchar(100)", nullable: true),
+                    UserId = table.Column<string>(type: "varchar(100)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -116,8 +116,8 @@ namespace BlogCore.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<string>(type: "varchar(100)", nullable: false),
+                    RoleId = table.Column<string>(type: "varchar(100)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -140,10 +140,10 @@ namespace BlogCore.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    UserId = table.Column<string>(type: "varchar(100)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "varchar(100)", maxLength: 128, nullable: false),
+                    Name = table.Column<string>(type: "varchar(100)", maxLength: 128, nullable: false),
+                    Value = table.Column<string>(type: "varchar(100)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -160,12 +160,9 @@ namespace BlogCore.Migrations
                 name: "Autores",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NomeCompleto = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Biografia = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DataNascimento = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UsuarioId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    UsuarioId = table.Column<string>(type: "varchar(100)", nullable: false),
                     DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataAtualizacao = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -176,18 +173,19 @@ namespace BlogCore.Migrations
                         name: "FK_Autores_AspNetUsers_UsuarioId",
                         column: x => x.UsuarioId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Posts",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Titulo = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Conteudo = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    AutorId = table.Column<int>(type: "int", nullable: false),
+                    Titulo = table.Column<string>(type: "varchar(100)", maxLength: 200, nullable: false),
+                    Conteudo = table.Column<string>(type: "varchar(100)", maxLength: 1000, nullable: false),
+                    AutorId = table.Column<long>(type: "bigint", nullable: false),
                     DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataAtualizacao = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -206,11 +204,11 @@ namespace BlogCore.Migrations
                 name: "Comentarios",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Conteudo = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    PostId = table.Column<int>(type: "int", nullable: false),
-                    UsuarioId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Conteudo = table.Column<string>(type: "varchar(100)", maxLength: 150, nullable: false),
+                    PostId = table.Column<long>(type: "bigint", nullable: false),
+                    UsuarioId = table.Column<string>(type: "varchar(100)", nullable: false),
                     DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataAtualizacao = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -221,7 +219,8 @@ namespace BlogCore.Migrations
                         name: "FK_Comentarios_AspNetUsers_UsuarioId",
                         column: x => x.UsuarioId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Comentarios_Posts_PostId",
                         column: x => x.PostId,

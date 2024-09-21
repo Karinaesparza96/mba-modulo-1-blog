@@ -2,20 +2,11 @@
 
 @{
     ViewData["Title"] = "Novo";
-    var messages = TempData["Messages"] as List<string>;
 }
 
 <div class="row">
     <div class="col-md-4">
-        <div>
-            @if (messages != null)
-            {
-                foreach (var msg in messages)
-                {
-                    <span class="text-danger">@msg</span>;
-                }
-            }
-        </div>
+        <partial name="_MessagesPartial" model="ViewBag.Messages"/>
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">

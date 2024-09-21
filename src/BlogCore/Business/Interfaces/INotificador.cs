@@ -7,6 +7,6 @@ namespace BlogCore.Business.Interfaces
         void Adicionar(Notificacao notificacao);
         bool TemNotificacao();
         IEnumerable<Notificacao> ObterNotificacoes();
-
+        bool ContemNotificacao(string mensagem);
     }
 }

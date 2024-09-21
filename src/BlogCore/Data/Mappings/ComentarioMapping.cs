@@ -1,6 +1,7 @@
 ﻿using BlogCore.Business.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Reflection.Emit;
 
 namespace BlogCore.Data.Mappings
 {
@@ -13,6 +14,11 @@ namespace BlogCore.Data.Mappings
             builder.Property(c => c.Conteudo)
                 .IsRequired()
                 .HasMaxLength(150);
+
+            builder.HasOne(c => c.Usuario)
+                .WithMany()
+                .HasForeignKey(c => c.UsuarioId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.ToTable("Comentarios");
         }

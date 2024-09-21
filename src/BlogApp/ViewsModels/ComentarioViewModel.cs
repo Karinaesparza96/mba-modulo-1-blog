@@ -3,7 +3,10 @@
 namespace BlogApp.ViewsModels
 {
     public class ComentarioViewModel
-    {
+    {   
+        public long Id { get; set; }
+        public string UsuarioId { get; set; }
+        public long PostId { get; set; }
         public string? NomeUsuario { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]

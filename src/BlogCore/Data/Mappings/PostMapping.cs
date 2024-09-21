@@ -21,10 +21,7 @@ namespace BlogCore.Data.Mappings
             builder.HasMany(p => p.Comentarios)
                    .WithOne(c => c.Post);
 
-            //builder.Property(p => p.Autor).IsRequired();
-
-            builder.HasOne(p => p.Autor)
-                .WithMany(a => a.Posts);
+            builder.HasOne(p => p.Autor);
 
             builder.ToTable("Posts");
         }

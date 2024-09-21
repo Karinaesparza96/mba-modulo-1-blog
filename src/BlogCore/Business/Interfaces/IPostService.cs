@@ -4,11 +4,10 @@ namespace BlogCore.Business.Interfaces
 {
     public interface IPostService
     {
-        Task<Post?> ObterPorId(int id);
+        Task<Post?> ObterPorId(long id);
         Task<IEnumerable<Post>> ObterTodos();
         Task Adicionar(Post post, string? userId);
-        Task Atualizar(int id, Post post);
-        Task Remover(int id);
-
+        Task Atualizar(Post post);
+        Task Remover(long id);
     }
 }

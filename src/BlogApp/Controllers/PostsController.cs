@@ -1,19 +1,19 @@
 ﻿using AutoMapper;
 using BlogApp.ViewsModels;
 using BlogCore.Business.Interfaces;
+using BlogCore.Business.MessagesDefault;
 using BlogCore.Business.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace BlogApp.Controllers
 {
     [Route("posts")]   
-    
     public class PostsController(IPostService postsService, 
                                 IMapper mapper, 
                                 INotificador notificador,
-                                IAppIdentityUser userApp) : MainController(notificador)
+                                IAppIdentityUser userApp
+        ) : MainController(notificador)
     {
         private readonly IPostService _postService = postsService;
         private readonly IMapper _mapper = mapper;
@@ -28,14 +28,14 @@ namespace BlogApp.Controllers
             return View(_mapper.Map<IEnumerable<PostViewModel>>(posts));
         }
 
-        [HttpGet("detalhes/{id:int}")]
-        public async Task<IActionResult> Details(int id)
+        [HttpGet("detalhes/{id:long}")]
+        public async Task<IActionResult> Details(long id)
         {
             var post = await _postService.ObterPorId(id);
 
             if (post == null)
             {
-                Notificar("Registro não encontrado");
+                Notificar(Messages.RegistroNaoEncontrado);
             }
 
             return CustomResponse(_mapper.Map<PostViewModel>(post));
@@ -51,43 +51,45 @@ namespace BlogApp.Controllers
         public async Task<IActionResult> Create(PostViewModel post)
         {
             if (!ModelState.IsValid)
-            {   
+            {
                 return View(post);
             }
 
-            var userIdLogado = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userIdLogado = _userApp.GetUserId();
 
             await _postService.Adicionar(_mapper.Map<Post>(post), userIdLogado);
 
-            if (OperacaoValida()) return RedirectToAction(nameof(Index));
+            if (!OperacaoValida())
+            {
+                return CustomResponse(post);
+            }
 
-            return CustomResponse(post);
+            return RedirectToAction(nameof(Index));
         }
 
-        [Authorize, HttpGet("editar/{id:int}")]
-        public async Task<IActionResult> Edit(int id)
+        [Authorize, HttpGet("editar/{id:long}")]
+        public async Task<IActionResult> Edit(long id)
         {
             var post = await _postService.ObterPorId(id);
 
             if (post == null)
             {
-                Notificar("Registro não encontrado");
-                return CustomResponse();
+                Notificar(Messages.RegistroNaoEncontrado);
+                return RedirectToAction("Error", "Home");
             }
-
-            var usuarioAutorizado = post.Autor.UsuarioId == _userApp.GetUserId() || _userApp.IsAdmin();
-
+            var usuarioAutorizado = _userApp.IsAuthorized(post.Autor.UsuarioId);
+             
             if (!usuarioAutorizado)
             {
-                Notificar("A ação só pode ser realizada pelo Autor do registro ou perfil Admin.");
-                return RedirectToAction("Home/Error");
+                Notificar(Messages.AcaoRestritaAutorOuAdmin);
+                return RedirectToAction("Error", "Home");
             }
             
             return CustomResponse(_mapper.Map<PostViewModel>(post));
         }
 
-        [Authorize, HttpPost("editar/{id:int}"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, PostViewModel postViewModel)
+        [Authorize, HttpPost("editar/{id:long}"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(long id, PostViewModel postViewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -96,64 +98,48 @@ namespace BlogApp.Controllers
 
             if (id != postViewModel.Id)
             {
-                Notificar("Os ids informados não são iguais."); 
+                Notificar(Messages.IdsDiferentes); 
                 return CustomResponse(postViewModel);
             }
 
-            var post = await _postService.ObterPorId(id);
+            await _postService.Atualizar(_mapper.Map<Post>(postViewModel));
 
-            if (post == null)
-            {
-                Notificar("Registro não encontrado");
+            if (!OperacaoValida()) 
                 return CustomResponse(postViewModel);
-            }
-
-            var usuarioAutorizado = post.Autor.UsuarioId == _userApp.GetUserId() || _userApp.IsAdmin();
-
-            if (!usuarioAutorizado)
-            {
-                Notificar("A ação só pode ser realizada pelo Autor do registro ou perfil Admin.");
-                return RedirectToAction("Home/Error");
-            }
-
-            await _postService.Atualizar(id, _mapper.Map<Post>(postViewModel));
-
-            if (!OperacaoValida()) return CustomResponse(postViewModel);
 
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet("excluir/{id:int}")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpGet("excluir/{id:long}")]
+        public async Task<IActionResult> Delete(long id)
         {
             var post = await _postService.ObterPorId(id);
 
             if (post == null)
             {
-                Notificar("Registro não encontrado");
+                Notificar(Messages.RegistroNaoEncontrado);
                 return CustomResponse();
             }
+            var usuarioAutorizado = _userApp.IsAuthorized(post.Autor.UsuarioId);
 
+            if (!usuarioAutorizado)
+            {
+                Notificar(Messages.AcaoRestritaAutorOuAdmin);
+                return RedirectToAction("Error", "Home");
+            }
             return View(_mapper.Map<PostViewModel>(post));
         }
 
-        [HttpPost("excluir/{id:int}")]
+        [HttpPost("excluir/{id:long}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            var post = await _postService.ObterPorId(id);
-
-            if (post == null)
-            {
-                Notificar("Registro não encontrado");
-                return CustomResponse();
-            }
-
             await _postService.Remover(id);
 
-            if (OperacaoValida()) return RedirectToAction(nameof(Index));
+            if (!OperacaoValida())
+                return CustomResponse();
 
-            return CustomResponse();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

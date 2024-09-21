@@ -5,5 +5,7 @@
         public string GetUserId();
         bool IsAuthenticated();
         public bool IsAdmin();
+
+        public bool IsAuthorized(string userId);
     }
 }

@@ -1,0 +1,14 @@
+﻿@model ComentarioViewModel;
+
+<partial name="_MessagesPartial" model="ViewBag.Messages" />
+<form asp-controller="Comentario" asp-action="Create" asp-route-postId="@Model.PostId">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Conteudo" class="control-label"></label>
+        <input asp-for="Conteudo" class="form-control" />
+        <span asp-validation-for="Conteudo" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Adicionar" class="btn btn-primary" />
+    </div>
+</form>
