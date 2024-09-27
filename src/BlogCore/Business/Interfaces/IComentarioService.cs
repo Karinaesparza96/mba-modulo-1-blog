@@ -4,6 +4,8 @@ namespace BlogCore.Business.Interfaces
 {
     public interface IComentarioService
     {
-        Task Adicionar(Comentario comentario);
+        Task<IEnumerable<Comentario>> Adicionar(Comentario comentario);
+
+        Task Atualizar(Comentario comentario);
     }
 }

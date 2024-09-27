@@ -5,25 +5,25 @@ namespace BlogApp.Extensions
 {
     public class AppIdentityUser(IHttpContextAccessor accessor) : IAppIdentityUser
     {
-        private readonly IHttpContextAccessor _accessor = accessor;
-
         public string GetUserId()
         {
             if (!IsAuthenticated()) return string.Empty;
 
-            var claim = _accessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var claim = accessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            Console.WriteLine("UserId GetUserId => " + claim);
 
             return claim ?? string.Empty;
         }
 
         public bool IsAuthenticated()
         {
-            return _accessor.HttpContext?.User.Identity is { IsAuthenticated: true };
+            return accessor.HttpContext?.User.Identity is { IsAuthenticated: true };
         }
 
         public bool IsAdmin()
         {
-            return _accessor.HttpContext?.User.IsInRole("Admin") ?? false;
+            return accessor.HttpContext?.User.IsInRole("Admin") ?? false;
         }
 
         public bool IsAuthorized(string? userId)

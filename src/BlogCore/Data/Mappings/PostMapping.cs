@@ -11,12 +11,12 @@ namespace BlogCore.Data.Mappings
             builder.HasKey(x => x.Id);
 
             builder.Property(p => p.Titulo)
-                .IsRequired()
-                .HasMaxLength(200);
+                .HasColumnType("varchar(200)")
+                .IsRequired();
 
             builder.Property(p => p.Conteudo)
                 .IsRequired()
-                .HasMaxLength(1000);
+                .HasColumnType("varchar(1000)");
 
             builder.HasMany(p => p.Comentarios)
                    .WithOne(c => c.Post);

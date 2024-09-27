@@ -1,4 +1,6 @@
-﻿namespace BlogCore.Business.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace BlogCore.Business.Models
 {
     public abstract class Entity
     {

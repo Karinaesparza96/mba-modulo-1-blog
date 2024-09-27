@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BlogCore.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -183,8 +183,8 @@ namespace BlogCore.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Titulo = table.Column<string>(type: "varchar(100)", maxLength: 200, nullable: false),
-                    Conteudo = table.Column<string>(type: "varchar(100)", maxLength: 1000, nullable: false),
+                    Titulo = table.Column<string>(type: "varchar(200)", nullable: false),
+                    Conteudo = table.Column<string>(type: "varchar(1000)", nullable: false),
                     AutorId = table.Column<long>(type: "bigint", nullable: false),
                     DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataAtualizacao = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -206,7 +206,7 @@ namespace BlogCore.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Conteudo = table.Column<string>(type: "varchar(100)", maxLength: 150, nullable: false),
+                    Conteudo = table.Column<string>(type: "varchar(150)", nullable: false),
                     PostId = table.Column<long>(type: "bigint", nullable: false),
                     UsuarioId = table.Column<string>(type: "varchar(100)", nullable: false),
                     DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),

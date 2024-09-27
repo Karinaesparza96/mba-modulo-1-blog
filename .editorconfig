@@ -1,0 +1,18 @@
+
+[*]
+
+# Microsoft .NET properties
+csharp_style_namespace_declarations = file_scoped:suggestion
+
+# ReSharper properties
+resharper_braces_for_for = required_for_multiline
+resharper_braces_for_ifelse = not_required
+resharper_force_attribute_style = join
+resharper_html_space_before_self_closing = true
+resharper_quote_style = singlequoted
+resharper_sort_attributes = true
+
+# ReSharper inspection severities
+resharper_arrange_null_checking_pattern_highlighting = suggestion
+resharper_arrange_trailing_comma_in_multiline_lists_highlighting = suggestion
+resharper_arrange_trailing_comma_in_singleline_lists_highlighting = suggestion

@@ -1,0 +1,30 @@
+﻿@model ComentarioViewModel
+
+<div class="modal fade" id="modal" tabindex="-1">
+    <partial name="_MessagesPartial" model="ViewBag.Messages" />
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="title"></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-controller="Comentario" id="FormModalComentario">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <input type="hidden" asp-for="Id"  />
+                        <input type="hidden" asp-for="PostId" value="@ViewData["PostId"]" />
+                        <label asp-for="Conteudo" class="control-label"></label>
+                        <input asp-for="Conteudo" class="form-control" />
+                        <span asp-validation-for="Conteudo" class="text-danger"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" value="Salvar" class="btn btn-primary" />
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

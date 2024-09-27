@@ -1,4 +1,5 @@
-﻿using BlogCore.Business.Models;
+﻿using BlogCore.Business.Interfaces;
+using BlogCore.Business.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,8 +12,6 @@ namespace BlogCore.Data.Context
         public DbSet<Autor> Autores { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-
             foreach (var property in builder.Model
             .GetEntityTypes()
             .SelectMany(e => e.GetProperties())
@@ -21,16 +20,17 @@ namespace BlogCore.Data.Context
                 property.SetColumnType("varchar(100)");
             }
 
+            builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
             base.OnModelCreating(builder);
         }
         public override Task<int> SaveChangesAsync(CancellationToken cancellation = default)
-        {
+        {   
             foreach (var entry in ChangeTracker.Entries())
             {
                 if (entry.Entity is Entity)
                 {
                     if (entry.State == EntityState.Added)
-                    {
+                    {   
                         entry.Property("DataCadastro").CurrentValue = DateTime.Now;
                     }
                     if (entry.State == EntityState.Modified)

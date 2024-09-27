@@ -35,8 +35,9 @@ namespace BlogCore.Business.Services
             return posts;
         }
 
-        public async Task Adicionar(Post post, string? userId)
+        public async Task Adicionar(Post post)
         {
+            var userId = _userApp.GetUserId();
             var autor = await ObterAutorPorIdUsuario(userId);
 
             if (autor == null)

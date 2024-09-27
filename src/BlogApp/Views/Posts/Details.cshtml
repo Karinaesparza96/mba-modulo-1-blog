@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Details";
-    ViewData["PostId"] = Model.Id;
+    ViewData["PostId"] = (long)Model.Id;
 }
 
 <h1>Details</h1>
@@ -28,7 +28,7 @@
             @Html.DisplayNameFor(model => model.Autor)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Autor.Usuario.UserName)
+            @Html.DisplayFor(model => model.Autor!.Usuario!.UserName)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DataPublicacao)

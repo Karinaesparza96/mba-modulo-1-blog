@@ -1,0 +1,29 @@
+﻿@model ComentarioViewModel
+
+<div class="card my-3">
+    <div class="card-body">
+        <h5 class="card-title">@Model.NomeUsuario</h5>
+        <p class="card-text">@Model.Conteudo</p>
+        <div class="d-flex gap-1">
+            <button type="button"
+                    class="btn btn-outline-primary btn-sm"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modal"
+                    id="btnEdit"
+                    data-action="edit"
+                    data-id="@Model.Id">
+                Editar
+            </button>
+            <button type="button"
+                    class="btn btn-outline-danger btn-sm"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modal"
+                    id="btnDelete"
+                    data-action="delete"
+                    data-id="@Model.Id">
+                Excluir
+            </button>
+        </div>
+    </div>
+</div>
+<partial name="_FormModalComentarioPartial" model="Model"/>

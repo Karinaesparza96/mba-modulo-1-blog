@@ -6,7 +6,7 @@ namespace BlogCore.Business.Interfaces
     {
         Task<Post?> ObterPorId(long id);
         Task<IEnumerable<Post>> ObterTodos();
-        Task Adicionar(Post post, string? userId);
+        Task Adicionar(Post post);
         Task Atualizar(Post post);
         Task Remover(long id);
     }

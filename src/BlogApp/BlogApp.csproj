@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ViewComponents\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BlogCore\BlogCore.csproj" />
   </ItemGroup>
 

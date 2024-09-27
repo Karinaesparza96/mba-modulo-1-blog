@@ -17,7 +17,7 @@ namespace BlogApp.Configurations
             CreateMap<AutorViewModel, Autor>().ReverseMap();
                 
             CreateMap<ComentarioViewModel, Comentario>()
-                .ForPath(dest => dest.DataCadastro, opt => opt.MapFrom(src => src.DataPublicacao))
+                .ForMember(dest => dest.DataCadastro, opt => opt.MapFrom(src => src.DataPublicacao))
                 .ForPath(dest => dest.Usuario.UserName, opt => opt.MapFrom(src => src.NomeUsuario));
 
             CreateMap<Comentario, ComentarioViewModel>()
