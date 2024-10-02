@@ -5,7 +5,7 @@
         public string GetUserId();
         bool IsAuthenticated();
         public bool IsAdmin();
-
-        public bool IsAuthorized(string userId);
+        public bool HasPermission(string? userIdComentario, string userIdAutor);
+        public bool IsOwnerOrAdmin(string? userId);
     }
 }

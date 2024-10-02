@@ -2,12 +2,15 @@
 
 namespace BlogCore.Business.Interfaces
 {
-    public interface IPostService
+    public interface IPostRepository
     {
         Task<Post?> ObterPorId(long id);
+
         Task<IEnumerable<Post>> ObterTodos();
         Task Adicionar(Post post);
+
         Task Atualizar(Post post);
-        Task Remover(long id);
+
+        Task Remover(Post id);
     }
 }

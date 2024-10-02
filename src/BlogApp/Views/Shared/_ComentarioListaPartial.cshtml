@@ -1,0 +1,32 @@
+﻿@model IEnumerable<ComentarioViewModel>
+
+<section id="comentario-lista">
+    <h3>Comentários</h3>
+    @if (Model.Any())
+    {
+        @foreach (var comentario in Model)
+        {
+            <div class="card my-3">
+                <div class="card-body">
+                    <h5 class="card-title">@comentario.NomeUsuario</h5>
+                    <p class="card-text">@comentario.Conteudo</p>
+                    @if (comentario.TemPermissao)
+                    {
+                        <div class="d-flex gap-1">
+                            <button class="btn btn-outline-primary btn-sm" id="btn-edit" data-id="@comentario.Id" data-postid="@comentario.PostId" data-bs-toggle="modal" data-bs-target="#comentario-modal">
+                                Editar
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm" id="btn-delete" data-id="@comentario.Id" data-postid="@comentario.PostId" data-bs-toggle="modal" data-bs-target="#comentario-modal-delete">
+                                Excluir
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>Seja o(a) primeiro(a) a comentar!</p>
+    }
+</section>

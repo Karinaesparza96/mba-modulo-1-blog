@@ -15,13 +15,12 @@ namespace BlogApp.Configurations
                 .ForMember(dest => dest.DataPublicacao, opt => opt.MapFrom(src => src.DataCadastro));
 
             CreateMap<AutorViewModel, Autor>().ReverseMap();
-                
+
             CreateMap<ComentarioViewModel, Comentario>()
-                .ForMember(dest => dest.DataCadastro, opt => opt.MapFrom(src => src.DataPublicacao))
-                .ForPath(dest => dest.Usuario.UserName, opt => opt.MapFrom(src => src.NomeUsuario));
+                .ForMember(dest => dest.DataCadastro, opt => opt.MapFrom(src => src.DataPublicacao));
 
             CreateMap<Comentario, ComentarioViewModel>()
-                .ForMember(dest => dest.NomeUsuario, opt => opt.MapFrom(src => src.Usuario.UserName))
+                .ForMember(dest => dest.NomeUsuario, opt => opt.MapFrom(src => src.Usuario!.UserName))
                 .ForMember(dest => dest.DataPublicacao, opt => opt.MapFrom(src => src.DataCadastro));
         }
     }

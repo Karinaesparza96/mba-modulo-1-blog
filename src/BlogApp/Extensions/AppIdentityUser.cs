@@ -11,8 +11,6 @@ namespace BlogApp.Extensions
 
             var claim = accessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            Console.WriteLine("UserId GetUserId => " + claim);
-
             return claim ?? string.Empty;
         }
 
@@ -26,11 +24,20 @@ namespace BlogApp.Extensions
             return accessor.HttpContext?.User.IsInRole("Admin") ?? false;
         }
 
-        public bool IsAuthorized(string? userId)
+        public bool IsOwnerOrAdmin(string? userId)
         {
             if (string.IsNullOrEmpty(userId)) return false;
-
+            
             return userId == GetUserId() || IsAdmin();
+        }
+
+        public bool HasPermission(string? userIdComentario, string? userIdAutor)
+        {
+            var userId = GetUserId();
+
+            if (IsAdmin()) return true;
+
+            return userIdComentario == userId || userIdAutor == userId;
         }
     }
 }

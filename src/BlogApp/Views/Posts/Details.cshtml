@@ -1,45 +1,71 @@
 ﻿@model PostViewModel
-
 @{
     ViewData["Title"] = "Details";
-    ViewData["PostId"] = (long)Model.Id;
 }
 
 <h1>Details</h1>
 
-<div>
-    <h4>Post</h4>
-    <hr />
+<section id="post-detalhes" class="row">
     <partial name="_MessagesPartial" model="ViewBag.Messages" />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Titulo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Titulo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Conteudo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Conteudo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Autor)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Autor!.Usuario!.UserName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DataPublicacao)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DataPublicacao)
-        </dd>
-    </dl>
-    <partial name="_ComentarioPartial" model="Model.Comentarios" />
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">
+                @Model.Titulo
+            </h2>
+            <p class="card-text">
+                @Model.Conteudo
+            </p>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+            <small class="text-muted">Por @Model.Autor?.Usuario?.UserName</small>
+            <small class="text-muted">Publicado em @Model.DataPublicacao?.ToShortDateString()</small>
+        </div>
+        <div class="d-flex justify-content-center">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
+            <a asp-action="Index" class="btn btn-primary">Voltar</a>
+        </div>
+    </div>
+    <partial name="_ComentarioListaPartial" model="Model.Comentarios" />
+    <partial name="_ComentarioFormPartial" model="new ComentarioViewModel {PostId = Model.Id}"/>
+</section>
+
+<div class="modal fade" id="comentario-modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Editar Comentário
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Editar</a> |
-    <a asp-action="Index">Voltar</a>
+<div class="modal fade" id="comentario-modal-delete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Tem certeza que deseja excluir este comentário?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="btn-confirm" type="button" class="btn btn-primary">Sim</button>
+            </div>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="~/js/formulario.js" type="text/javascript"></script>
+}

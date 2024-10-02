@@ -9,7 +9,7 @@
 }
 <div class="container mt-5">
     <div class="d-flex justify-content-end mb-3">
-        <a asp-action="Create" class="btn btn-success">NOVO</a>
+        <a asp-action="Create" class="btn btn-success">NOVO POST</a>
     </div>
 
     <div class="row">
@@ -23,14 +23,17 @@
 
                     <div class="card-body">
                         <p class="card-text">
-                            @(post.Conteudo.Length > 99 ? post.Conteudo.Substring(0, 99) + "..." : post.Conteudo) <a asp-action="Details" asp-route-id="@post.Id" class="btn btn-sm btn-outline-success">LER MAIS</a>
+                            @(post.Conteudo is { Length: > 99 } ? post.Conteudo[..99] + "..." : post.Conteudo) 
                         </p>
+                        <div class="justify-content-end">
+                            <a asp-action="Details" asp-route-id="@post.Id" class="btn btn-sm btn-outline-success">LER MAIS</a>
+                        </div>
                     </div>
 
                     <div class="card-footer d-flex justify-content-between align-items-center">
-                        <small class="text-muted">Por @post.Autor.Usuario.UserName</small>
-                        <small class="text-muted">Publicado em @post.DataPublicacao.Value.ToShortDateString()</small>
-                        @if(userApp.IsAuthorized(post.Autor.UsuarioId))
+                        <small class="text-muted">Por @post.Autor?.Usuario?.UserName</small>
+                        <small class="text-muted">Publicado em @post.DataPublicacao?.ToShortDateString()</small>
+                        @if(userApp.IsOwnerOrAdmin(post.Autor?.UsuarioId))
                         {
                             <div class="d-flex gap-1">
                                 <a asp-action="Edit" asp-route-id="@post.Id" class="btn btn-sm btn-outline-primary">Editar</a>

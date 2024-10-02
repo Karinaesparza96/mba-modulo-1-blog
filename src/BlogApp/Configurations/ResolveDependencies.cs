@@ -1,7 +1,7 @@
 ﻿using BlogApp.Extensions;
 using BlogCore.Business.Interfaces;
 using BlogCore.Business.Notificacoes;
-using BlogCore.Business.Services;
+using BlogCore.Data.Repositories;
 
 namespace BlogApp.Configurations
 {
@@ -10,8 +10,8 @@ namespace BlogApp.Configurations
         public static IServiceCollection ResolveDependencieInjection(this IServiceCollection services)
         {
             services.AddScoped<IAppIdentityUser, AppIdentityUser>();
-            services.AddScoped<IPostService, PostService>();
-            services.AddScoped<IComentarioService, ComentarioService>();
+            services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<IComentarioRepository, ComentarioRepository>();
             services.AddScoped<INotificador, Notificador>();
 
 
