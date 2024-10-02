@@ -1,5 +1,4 @@
-﻿using BlogCore.Business.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace BlogApp.ViewsModels
 {

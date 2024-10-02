@@ -1,4 +1,3 @@
-using BlogApp.Configuration;
 using BlogApp.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);

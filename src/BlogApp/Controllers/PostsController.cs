@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BlogApp.Configurations;
 using BlogApp.ViewsModels;
 using BlogCore.Business.Interfaces;
 using BlogCore.Business.MessagesDefault;
@@ -9,15 +10,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace BlogApp.Controllers
 {
     [Route("posts")]
-    public class PostsController(IPostService postsService, 
-                                IMapper mapper, 
-                                INotificador notificador,
-                                IAppIdentityUser userApp) : MainController(notificador)
+    public class PostsController(IPostRepository postsRepository, 
+                                IMapper mapper,
+                                IAppIdentityUser userApp) : Controller
     {
         [HttpGet("")]
         public async Task<IActionResult> Index()
         {
-            var posts = await postsService.ObterTodos();
+            var posts = await postsRepository.ObterTodos();
 
             return View(mapper.Map<IEnumerable<PostViewModel>>(posts));
         }
@@ -25,14 +25,18 @@ namespace BlogApp.Controllers
         [HttpGet("detalhes/{id:long}")]
         public async Task<IActionResult> Details(long id)
         {
-            var post = await postsService.ObterPorId(id);
+            var post = await postsRepository.ObterPorId(id);
 
             if (post == null)
             {
-                Notificar(Messages.RegistroNaoEncontrado);
+                return NotFound();
             }
+            
+            var postViewModel = mapper.Map<PostViewModel>(post);
 
-            return CustomResponse(mapper.Map<PostViewModel>(post));
+            postViewModel.Comentarios?.DefinirPermissoes(userApp, post.Autor.UsuarioId);
+
+            return View(postViewModel);
         }
 
         [Authorize, HttpGet("novo")]
@@ -49,36 +53,29 @@ namespace BlogApp.Controllers
                 return View(post);
             }
 
-            await postsService.Adicionar(mapper.Map<Post>(post));
+            await postsRepository.Adicionar(mapper.Map<Post>(post));
 
-            if (!OperacaoValida())
-            {
-                return CustomResponse(post);
-            }
-
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
 
         [Authorize, HttpGet("editar/{id:long}")]
         public async Task<IActionResult> Edit(long id)
         {
-            var post = await postsService.ObterPorId(id);
+            var post = await postsRepository.ObterPorId(id);
 
             if (post == null)
             {
-                Notificar(Messages.RegistroNaoEncontrado);
-                return RedirectToAction("Error", "Home");
+                return NotFound();
             }
 
-            var usuarioAutorizado = userApp.IsAuthorized(post.Autor.UsuarioId);
+            var usuarioAutorizado = userApp.IsOwnerOrAdmin(post.Autor.UsuarioId);
 
             if (!usuarioAutorizado)
             {
-                Notificar(Messages.AcaoRestritaAutorOuAdmin);
-                return RedirectToAction("Error", "Home");
+                return Forbid();
             }
 
-            return CustomResponse(mapper.Map<PostViewModel>(post));
+            return View(mapper.Map<PostViewModel>(post));
         }
 
         [Authorize, HttpPost("editar/{id:long}"), ValidateAntiForgeryToken]
@@ -86,39 +83,52 @@ namespace BlogApp.Controllers
         {
             if (id != postViewModel.Id)
             {
-                Notificar(Messages.IdsDiferentes);
-                return CustomResponse(postViewModel);
+                ModelState.AddModelError("", Messages.IdsDiferentes);
+                return View(postViewModel);
             }
 
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
+            {
                 return View(postViewModel);
+            }
 
-            await postsService.Atualizar(mapper.Map<Post>(postViewModel));
+            var post = await postsRepository.ObterPorId(id);
 
-            if (!OperacaoValida())
-                return CustomResponse(postViewModel);
+            if (post == null)
+            {
+                return NotFound();
+            }
 
-            return RedirectToAction(nameof(Index));
+            var usuarioAutorizado = userApp.IsOwnerOrAdmin(post.Autor.UsuarioId);
+
+            if (!usuarioAutorizado)
+            {
+                return Forbid();
+            }
+
+            post.Titulo = postViewModel.Titulo;
+            post.Conteudo = postViewModel.Conteudo;
+
+            await postsRepository.Atualizar(post);
+
+            return RedirectToAction("Index");
         }
 
         [HttpGet("excluir/{id:long}")]
         public async Task<IActionResult> Delete(long id)
         {
-            var post = await postsService.ObterPorId(id);
+            var post = await postsRepository.ObterPorId(id);
 
             if (post == null)
             {
-                Notificar(Messages.RegistroNaoEncontrado);
-                return CustomResponse();
+                NotFound();
             }
 
-            var usuarioAutorizado = userApp.IsAuthorized(post.Autor.UsuarioId);
+            var usuarioAutorizado = userApp.IsOwnerOrAdmin(post?.Autor.UsuarioId);
 
             if (!usuarioAutorizado)
             {
-                Notificar(Messages.AcaoRestritaAutorOuAdmin);
-                // TODO: ControllerError
-                return RedirectToAction("Error", "Home");
+                Forbid();
             }
 
             return View(mapper.Map<PostViewModel>(post));
@@ -128,12 +138,21 @@ namespace BlogApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            await postsService.Remover(id);
+            var post = await postsRepository.ObterPorId(id);
 
-            if (!OperacaoValida())
-                return CustomResponse();
+            if (post == null)
+            {
+                return NotFound();
+            }
+            var usuarioAutorizado = userApp.IsOwnerOrAdmin(post.Autor.UsuarioId);
 
-            return RedirectToAction(nameof(Index));
+            if (!usuarioAutorizado)
+            {
+                NotFound();
+            }
+            await postsRepository.Remover(post);
+
+            return RedirectToAction("Index");
         }
     }
 }

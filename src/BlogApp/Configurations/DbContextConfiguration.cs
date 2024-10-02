@@ -1,7 +1,7 @@
 ﻿using BlogCore.Data.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlogApp.Configuration
+namespace BlogApp.Configurations
 {
     public static class DbContextConfiguration
     {

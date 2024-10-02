@@ -9,7 +9,6 @@ resharper_braces_for_for = required_for_multiline
 resharper_braces_for_ifelse = not_required
 resharper_force_attribute_style = join
 resharper_html_space_before_self_closing = true
-resharper_quote_style = singlequoted
 resharper_sort_attributes = true
 
 # ReSharper inspection severities

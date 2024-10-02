@@ -7,7 +7,7 @@ namespace BlogCore.Business.Models
         public string? Conteudo { get; set; }
         public long PostId { get; set; }
         public Post? Post { get; set; }
-        public string UsuarioId { get; set; }
+        public required string UsuarioId { get; set; }
         public IdentityUser? Usuario { get; set; }
 
     }
