@@ -6,6 +6,6 @@ namespace BlogApp.ViewsModels
     {   
         public long Id { get; set; }
         public string? UsuarioId { get; set; }
-        public IdentityUser? Usuario { get; set; }
+        public string? Nome { get; set; }
     }
 }

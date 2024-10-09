@@ -164,7 +164,8 @@ namespace BlogCore.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UsuarioId = table.Column<string>(type: "varchar(100)", nullable: false),
                     DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataAtualizacao = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DataAtualizacao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Excluido = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -187,7 +188,8 @@ namespace BlogCore.Migrations
                     Conteudo = table.Column<string>(type: "varchar(1000)", nullable: false),
                     AutorId = table.Column<long>(type: "bigint", nullable: false),
                     DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataAtualizacao = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DataAtualizacao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Excluido = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -210,7 +212,8 @@ namespace BlogCore.Migrations
                     PostId = table.Column<long>(type: "bigint", nullable: false),
                     UsuarioId = table.Column<string>(type: "varchar(100)", nullable: false),
                     DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataAtualizacao = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DataAtualizacao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Excluido = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

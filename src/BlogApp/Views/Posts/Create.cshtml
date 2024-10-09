@@ -1,33 +1,35 @@
 ﻿@model PostViewModel
-
 @{
-    ViewData["Title"] = "Novo";
+    ViewData["Title"] = "Novo Post";
 }
-
-<div class="row">
-    <div class="col-md-4">
-        <partial name="_MessagesPartial" model="ViewBag.Messages"/>
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Titulo" class="control-label"></label>
-                <input asp-for="Titulo" class="form-control" />
-                <span asp-validation-for="Titulo" class="text-danger"></span>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        <div class="form-group mb-3">
+                            <label asp-for="Titulo" class="form-label"></label>
+                            <input asp-for="Titulo" class="form-control" />
+                            <span asp-validation-for="Titulo" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="Conteudo" class="form-label"></label>
+                            <textarea asp-for="Conteudo" class="form-control" rows="5"></textarea>
+                            <span asp-validation-for="Conteudo" class="text-danger"></span>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <input type="submit" value="CRIAR" class="btn btn-outline-primary" />
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Conteudo" class="control-label"></label>
-                <input asp-for="Conteudo" class="form-control" />
-                <span asp-validation-for="Conteudo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Voltar</a>
+    <div class="text-center mt-3">
+        <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+    </div>
 </div>
 
 @section Scripts {

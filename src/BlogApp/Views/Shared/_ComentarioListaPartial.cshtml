@@ -1,8 +1,6 @@
 ﻿@model IEnumerable<ComentarioViewModel>
-
-<section id="comentario-lista">
-    <h3>Comentários</h3>
-    @if (Model.Any())
+<section id="comentario-lista" class="mt-2">
+    @if (Model != null && Model.Any())
     {
         @foreach (var comentario in Model)
         {
@@ -10,14 +8,14 @@
                 <div class="card-body">
                     <h5 class="card-title">@comentario.NomeUsuario</h5>
                     <p class="card-text">@comentario.Conteudo</p>
-                    @if (comentario.TemPermissao)
+                    @if (ViewBag.TemPermissao)
                     {
-                        <div class="d-flex gap-1">
-                            <button class="btn btn-outline-primary btn-sm" id="btn-edit" data-id="@comentario.Id" data-postid="@comentario.PostId" data-bs-toggle="modal" data-bs-target="#comentario-modal">
-                                Editar
+                        <div class="d-flex gap-1 justify-content-end">
+                            <button class="btn btn-outline-primary btn-sm" id="btn-edit" data-id="@comentario.Id" data-postid="@comentario.PostId" data-bs-toggle="modal" data-bs-target="#comentario-modal" title="editar">
+                                <i class="bi bi-pencil-square"></i>
                             </button>
-                            <button class="btn btn-outline-danger btn-sm" id="btn-delete" data-id="@comentario.Id" data-postid="@comentario.PostId" data-bs-toggle="modal" data-bs-target="#comentario-modal-delete">
-                                Excluir
+                            <button class="btn btn-outline-danger btn-sm" id="btn-delete" data-id="@comentario.Id" data-postid="@comentario.PostId" data-bs-toggle="modal" data-bs-target="#comentario-modal-delete" title="excluir">
+                                <i class="bi bi-trash3"></i>
                             </button>
                         </div>
                     }
@@ -27,6 +25,6 @@
     }
     else
     {
-        <p>Seja o(a) primeiro(a) a comentar!</p>
+        <p>Seja o primeiro a comentar!</p>
     }
 </section>

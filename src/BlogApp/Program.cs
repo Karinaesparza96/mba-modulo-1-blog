@@ -1,4 +1,5 @@
 using BlogApp.Configurations;
+using BlogCore.Data.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,12 +9,12 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentity();
 
-builder.Services.ResolveDependencieInjection();
+builder.Services.AddResolveDependencie();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 
-builder.Services.AddAutoMapper();
+builder.Services.AddAutoMapper(typeof(AutoMappingConfiguration).Assembly);
 
 var app = builder.Build();
 
@@ -24,7 +25,7 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
 
@@ -39,5 +40,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
+
+app.UseDbMigrationHelper();
 
 app.Run();

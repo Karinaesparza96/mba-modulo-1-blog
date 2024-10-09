@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using BlogApp.Configurations;
 using BlogApp.ViewsModels;
 using BlogCore.Business.Interfaces;
-using BlogCore.Business.MessagesDefault;
+using BlogCore.Business.Messages;
 using BlogCore.Business.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,8 +17,11 @@ namespace BlogApp.Controllers
         public async Task<IActionResult> Index()
         {
             var posts = await postsRepository.ObterTodos();
+            var postsViewModel = mapper.Map<IEnumerable<PostViewModel>>(posts);
 
-            return View(mapper.Map<IEnumerable<PostViewModel>>(posts));
+            postsViewModel.DefinirPermissoes(userApp);
+
+            return View(postsViewModel);
         }
 
         [HttpGet("detalhes/{id:long}")]
@@ -33,8 +35,7 @@ namespace BlogApp.Controllers
             }
             
             var postViewModel = mapper.Map<PostViewModel>(post);
-
-            postViewModel.Comentarios?.DefinirPermissoes(userApp, post.Autor.UsuarioId);
+            postViewModel.DefinirPermissao(userApp);
 
             return View(postViewModel);
         }
@@ -75,7 +76,10 @@ namespace BlogApp.Controllers
                 return Forbid();
             }
 
-            return View(mapper.Map<PostViewModel>(post));
+            var postViewModel = mapper.Map<PostViewModel>(post);
+            postViewModel.DefinirPermissao(userApp);
+
+            return View(postViewModel);
         }
 
         [Authorize, HttpPost("editar/{id:long}"), ValidateAntiForgeryToken]
@@ -114,27 +118,30 @@ namespace BlogApp.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet("excluir/{id:long}")]
+        [Authorize, HttpGet("excluir/{id:long}")]
         public async Task<IActionResult> Delete(long id)
         {
             var post = await postsRepository.ObterPorId(id);
 
             if (post == null)
             {
-                NotFound();
+                return NotFound();
             }
 
-            var usuarioAutorizado = userApp.IsOwnerOrAdmin(post?.Autor.UsuarioId);
+            var usuarioAutorizado = userApp.IsOwnerOrAdmin(post.Autor.UsuarioId);
 
             if (!usuarioAutorizado)
             {
-                Forbid();
+                return Forbid();
             }
 
-            return View(mapper.Map<PostViewModel>(post));
+            var postViewModel = mapper.Map<PostViewModel>(post);
+            postViewModel.DefinirPermissao(userApp);
+
+            return View(postViewModel);
         }
 
-        [HttpPost("excluir/{id:long}")]
+        [Authorize, HttpPost("excluir/{id:long}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
@@ -148,7 +155,7 @@ namespace BlogApp.Controllers
 
             if (!usuarioAutorizado)
             {
-                NotFound();
+                return Forbid();
             }
             await postsRepository.Remover(post);
 

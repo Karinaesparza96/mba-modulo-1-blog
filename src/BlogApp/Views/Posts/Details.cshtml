@@ -1,71 +1,61 @@
 ﻿@model PostViewModel
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalhes";
+    ViewBag.TemPermissao = Model.TemPermissao;
 }
-
-<h1>Details</h1>
-
-<section id="post-detalhes" class="row">
-    <partial name="_MessagesPartial" model="ViewBag.Messages" />
-    <div class="card">
-        <div class="card-body">
-            <h2 class="card-title">
-                @Model.Titulo
-            </h2>
-            <p class="card-text">
-                @Model.Conteudo
-            </p>
-        </div>
-        <div class="card-footer d-flex justify-content-between align-items-center">
-            <small class="text-muted">Por @Model.Autor?.Usuario?.UserName</small>
-            <small class="text-muted">Publicado em @Model.DataPublicacao?.ToShortDateString()</small>
-        </div>
-        <div class="d-flex justify-content-center">
-            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Editar</a>
-            <a asp-action="Index" class="btn btn-primary">Voltar</a>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <a asp-action="Index" class="btn btn-outline-secondary mb-4">
+                Voltar
+            </a>
         </div>
     </div>
-    <partial name="_ComentarioListaPartial" model="Model.Comentarios" />
-    <partial name="_ComentarioFormPartial" model="new ComentarioViewModel {PostId = Model.Id}"/>
-</section>
+    <section id="post-detalhes" class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        @Model.Titulo
+                    </h2>
+                    <p class="card-text">
+                        @Model.Conteudo
+                    </p>
+                </div>
 
-<div class="modal fade" id="comentario-modal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    Editar Comentário
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-              
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <small class="text-muted">Por @Model.Autor?.Nome</small>
+                    <small class="text-muted">Publicado em @Model.DataPublicacao?.ToShortDateString()</small>
+                </div>
+
+                @if (Model.TemPermissao)
+                {
+                    <div class="card-footer d-flex justify-content-end gap-2">
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary" title="editar"> <i class="bi bi-pencil-square"></i></a>
+                        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger" title="excluir"><i class="bi bi-trash3"></i></a>
+                    </div>
+                }
             </div>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+    </section>
+    <section id="comentarios" class="row mt-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="mb-4">Comentários</h4>
+                    <partial name="_ComentarioListaPartial" model="Model.Comentarios" />
+                    <hr />
+                    <h5 class="mb-3">Deixe um comentário:</h5>
+                    <partial name="_ComentarioFormPartial" model="new ComentarioViewModel { PostId = Model.Id }" />
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
 </div>
-<div class="modal fade" id="comentario-modal-delete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Tem certeza que deseja excluir este comentário?</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button id="btn-confirm" type="button" class="btn btn-primary">Sim</button>
-            </div>
-        </div>
-    </div>
-</div>
-
+<partial name="_ModalPartial"/>
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script src="~/js/formulario.js" type="text/javascript"></script>
     }
-
-    <script src="~/js/formulario.js" type="text/javascript"></script>
 }

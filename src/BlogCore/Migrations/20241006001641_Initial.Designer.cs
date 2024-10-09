@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogCore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240925205549_Initial")]
+    [Migration("20241006001641_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -38,6 +38,9 @@ namespace BlogCore.Migrations
 
                     b.Property<DateTime>("DataCadastro")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("Excluido")
+                        .HasColumnType("bit");
 
                     b.Property<string>("UsuarioId")
                         .IsRequired()
@@ -67,6 +70,9 @@ namespace BlogCore.Migrations
 
                     b.Property<DateTime>("DataCadastro")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("Excluido")
+                        .HasColumnType("bit");
 
                     b.Property<long>("PostId")
                         .HasColumnType("bigint");
@@ -104,6 +110,9 @@ namespace BlogCore.Migrations
 
                     b.Property<DateTime>("DataCadastro")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("Excluido")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Titulo")
                         .IsRequired()

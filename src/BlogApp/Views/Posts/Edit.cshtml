@@ -1,51 +1,63 @@
 ﻿@model PostViewModel
-
 @{
-    ViewData["Title"] = "Editar";
-    ViewData["PostId"] = Model.Id;
+    ViewData["Title"] = "Editar Post";
+    ViewBag.TemPermissao = Model.TemPermissao;
 }
-
-<h1>Editar Post</h1>
-
-<div class="row">
-    <div class="col-md-8">
-        <partial name="_MessagesPartial" model="ViewBag.Messages" />
-
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="AutorId" />
-
-            <div class="form-group">
-                <label asp-for="Titulo" class="control-label"></label>
-                <input asp-for="Titulo" class="form-control" />
-                <span asp-validation-for="Titulo" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Conteudo" class="control-label"></label>
-                <textarea asp-for="Conteudo" class="form-control" rows="6"></textarea>
-                <span asp-validation-for="Conteudo" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Salvar Alterações" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <a asp-action="Index" class="btn btn-outline-secondary mb-4">
+                 Voltar
+            </a>
+        </div>
     </div>
+    <section id="post-editar" class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h3 class="card-title mb-4">Editar Post</h3>
 
-    <div class="col-md-4">
-        <partial name="_ComentarioListaPartial" model="Model.Comentarios" />
-    </div>
-</div>
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="AutorId" />
 
-<div>
-    <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+                        <div class="form-group mb-3">
+                            <label asp-for="Titulo" class="form-label"></label>
+                            <input asp-for="Titulo" class="form-control" />
+                            <span asp-validation-for="Titulo" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="Conteudo" class="form-label"></label>
+                            <textarea asp-for="Conteudo" class="form-control" rows="6"></textarea>
+                            <span asp-validation-for="Conteudo" class="text-danger"></span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <input type="submit" value="Salvar" class="btn btn-primary" />
+                            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">Excluir</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h4 class="mb-4">Comentários</h4>
+                    <partial name="_ComentarioListaPartial" model="Model.Comentarios" />
+                    <hr />
+                    <h5 class="mb-3">Adicionar Comentário:</h5>
+                    <partial name="_ComentarioFormPartial" model="new ComentarioViewModel { PostId = Model.Id }" />
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
+<partial name="_ModalPartial" />
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        <script src="~/js/formulario.js" type="text/javascript"></script>
     }
 }

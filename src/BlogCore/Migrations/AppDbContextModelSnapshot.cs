@@ -36,6 +36,9 @@ namespace BlogCore.Migrations
                     b.Property<DateTime>("DataCadastro")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("Excluido")
+                        .HasColumnType("bit");
+
                     b.Property<string>("UsuarioId")
                         .IsRequired()
                         .HasColumnType("varchar(100)");
@@ -64,6 +67,9 @@ namespace BlogCore.Migrations
 
                     b.Property<DateTime>("DataCadastro")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("Excluido")
+                        .HasColumnType("bit");
 
                     b.Property<long>("PostId")
                         .HasColumnType("bigint");
@@ -101,6 +107,9 @@ namespace BlogCore.Migrations
 
                     b.Property<DateTime>("DataCadastro")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("Excluido")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Titulo")
                         .IsRequired()

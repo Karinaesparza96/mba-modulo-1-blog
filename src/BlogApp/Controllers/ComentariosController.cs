@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-using BlogApp.Configurations;
 using BlogApp.ViewsModels;
 using BlogCore.Business.Interfaces;
-using BlogCore.Business.MessagesDefault;
 using BlogCore.Business.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,41 +23,63 @@ namespace BlogApp.Controllers
                 return NotFound();
             }
 
+            var postViewModel = mapper.Map<PostViewModel>(comentario.Post).DefinirPermissao(userApp);
+
+            ViewBag.TemPermissao = postViewModel.TemPermissao;
+
             var comentarioViewModel = mapper.Map<ComentarioViewModel>(comentario);
-            
+
             return PartialView("_ComentarioFormPartial", comentarioViewModel);
         }
-        [Authorize, HttpPost("novo")] // ValidateAntiForgeryToken
+        [Authorize, HttpPost("novo")]
         public async Task<IActionResult> Create(ComentarioViewModel comentarioViewModel, long postId)
-        {
+        {   
             if (!ModelState.IsValid)
-            { 
+            {
                 return PartialView("_ComentarioFormPartial", comentarioViewModel);
             }
             var post = await postRepository.ObterPorId(postId);
 
             if (post == null) return NotFound();
 
+            var postViewModel = mapper.Map<PostViewModel>(post).DefinirPermissao(userApp);
+
             await comentarioRepository.Adicionar(mapper.Map<Comentario>(comentarioViewModel));
 
-            var comentarios = await comentarioRepository.ObterTodosPorPost(postId);
+            ViewBag.TemPermissao = postViewModel.TemPermissao;
 
-            var comentariosViewModel = mapper.Map<IEnumerable<ComentarioViewModel>>(comentarios)
-                                                .DefinirPermissoes(userApp, post.Autor.UsuarioId);
+            return PartialView("_ComentarioListaPartial", mapper.Map<IEnumerable<ComentarioViewModel>>(post.Comentarios));
+        }
+        [Authorize, HttpGet("editar/{id:long}")]
+        public async Task<IActionResult> Edit(long id, long postId)
+        {
+            var comentario = await comentarioRepository.ObterPorId(id, postId);
 
-            return PartialView("_ComentarioListaPartial", comentariosViewModel);
+            if (comentario == null)
+            {
+                return NotFound();
+            }
+
+            var usuarioAutorizado = userApp.IsOwnerOrAdmin(comentario.Post?.Autor.UsuarioId);
+
+            if (!usuarioAutorizado)
+            {
+                return Forbid();
+            }
+            var comentarioViewModel = mapper.Map<ComentarioViewModel>(comentario);
+
+            return PartialView("_ComentarioFormPartial", comentarioViewModel);
         }
         [Authorize, HttpPost("editar/{id:long}")]
         public async Task<IActionResult> Edit(long id, ComentarioViewModel comentarioViewModel, long postId)
-        {
+        {   
             if (!ModelState.IsValid)
             {
                 return PartialView("_ComentarioFormPartial", comentarioViewModel);
             }
             if (id != comentarioViewModel.Id || postId != comentarioViewModel.PostId)
             {
-                ModelState.AddModelError("", Messages.IdsDiferentes); 
-                return  PartialView("_ComentarioFormPartial", comentarioViewModel);
+                return BadRequest();
             }
 
             var comentario = await comentarioRepository.ObterPorId(id, postId);
@@ -69,7 +89,7 @@ namespace BlogApp.Controllers
                 return NotFound();
             }
 
-            var usuarioAutorizado = userApp.HasPermission(comentario.UsuarioId, comentario.Post.Autor.UsuarioId);
+            var usuarioAutorizado = userApp.IsOwnerOrAdmin(comentario.Post?.Autor.UsuarioId);
 
             if (!usuarioAutorizado)
             {
@@ -81,8 +101,10 @@ namespace BlogApp.Controllers
             await comentarioRepository.Atualizar(comentario);
 
             var comentarios = mapper.Map<IEnumerable<ComentarioViewModel>>(await comentarioRepository.ObterTodosPorPost(comentario.PostId));
+            var postVewModel = mapper.Map<PostViewModel>(comentario.Post).DefinirPermissao(userApp);
 
-            return PartialView("_ComentarioListaPartial", comentarios.DefinirPermissoes(userApp, comentario.Post?.Autor.UsuarioId!));
+            ViewBag.TemPermissao = postVewModel.TemPermissao;
+            return PartialView("_ComentarioListaPartial", comentarios);
         }
 
         [Authorize, HttpPost("excluir/{id:long}")]
@@ -95,7 +117,7 @@ namespace BlogApp.Controllers
                 return NotFound();
             }
 
-            var usuarioAutorizado = userApp.HasPermission(comentario.UsuarioId, comentario.Post.Autor.UsuarioId);
+            var usuarioAutorizado = userApp.IsOwnerOrAdmin(comentario.Post?.Autor.UsuarioId);
 
             if (!usuarioAutorizado)
             {
@@ -105,8 +127,11 @@ namespace BlogApp.Controllers
             await comentarioRepository.Remover(comentario);
 
             var comentarios = mapper.Map<IEnumerable<ComentarioViewModel>>(await comentarioRepository.ObterTodosPorPost(comentario.PostId));
+            var postVewModel = mapper.Map<PostViewModel>(comentario.Post).DefinirPermissao(userApp);
 
-            return PartialView("_ComentarioListaPartial", comentarios.DefinirPermissoes(userApp, comentario.Post?.Autor.UsuarioId!));
+            ViewBag.TemPermissao = postVewModel.TemPermissao;
+
+            return PartialView("_ComentarioListaPartial", comentarios);
         }
     }
 }

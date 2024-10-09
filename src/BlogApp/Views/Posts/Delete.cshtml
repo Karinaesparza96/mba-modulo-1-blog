@@ -1,40 +1,52 @@
 ﻿@model PostViewModel
-
 @{
-    ViewData["Title"] = "Deletar";
+    ViewData["Title"] = "Deletar Post";
 }
-
-@if (Model.Comentarios.Any())
-{
-    <h3>Tem certeza que deseja remover este Post e seus Comentários?</h3>
-}
-else
-{
-    <h3>Tem certeza que deseja remover este Post? </h3>
-}
-<div class="row">
-    <h4>Post</h4>
-    <hr />
-    <partial name="_MessagesPartial" model="ViewBag.Messages" />
-    <div class="card col-sm-6">
-        <div class="card-body">
-            <h2 class="card-title">
-                @Model.Titulo
-            </h2>
-            <p class="card-text">
-                @Model.Conteudo
-            </p>
-        </div>
-        <div class="card-footer d-flex justify-content-between align-items-center">
-            <small class="text-muted">Por @Model.Autor?.Usuario?.UserName</small>
-            <small class="text-muted">Publicado em @Model.DataPublicacao?.ToShortDateString()</small>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-4">
+                @if (Model.Comentarios != null && Model.Comentarios.Any())
+                {
+                    <h5>Tem certeza que deseja remover este Post e seus Comentários?</h5>
+                }
+                else
+                {
+                    <h5>Tem certeza que deseja remover este Post?</h5>
+                }
+            </div>
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">@Model.Titulo</h5>
+                    <p class="card-text">@Model.Conteudo</p>
+                </div>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <small class="text-muted">Por @Model.Autor?.Nome</small>
+                    <small class="text-muted">Publicado em @Model.DataPublicacao?.ToShortDateString()</small>
+                </div>
+            </div>
+            @if (Model.Comentarios != null && Model.Comentarios.Any())
+            {
+                <div class="mb-4">
+                    <h5>Comentários relacionados:</h5>
+                    @foreach (var comentario in Model.Comentarios)
+                    {
+                        <div class="card my-2 shadow-sm">
+                            <div class="card-body">
+                                <h6 class="card-title">@comentario.NomeUsuario</h6>
+                                <p class="card-text">@comentario.Conteudo</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            <form asp-action="Delete" class="text-center">
+                <input type="hidden" asp-for="Id" />
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                    <input type="submit" value="Excluir" class="btn btn-outline-danger" />
+                    <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+                </div>
+            </form>
         </div>
     </div>
-    <form asp-action="Delete" class="col-sm-6">
-        <input type="hidden" asp-for="Id" />
-        <div class="d-flex justify-content-center gap-1">
-            <input type="submit" value="Deletar" class="btn btn-danger" />
-            <a asp-action="Index" class="btn btn-primary">Voltar</a>
-        </div>
-    </form>
 </div>

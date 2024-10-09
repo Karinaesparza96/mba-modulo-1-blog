@@ -1,20 +1,16 @@
-﻿using BlogApp.Extensions;
-using BlogCore.Business.Interfaces;
-using BlogCore.Business.Notificacoes;
+﻿using BlogCore.Business.Interfaces;
 using BlogCore.Data.Repositories;
+using BlogCore.Extensions;
 
 namespace BlogApp.Configurations
 {
-    public static class ResolveDependencies
+    public static class ResolveDependencieConfig
     {
-        public static IServiceCollection ResolveDependencieInjection(this IServiceCollection services)
+        public static IServiceCollection AddResolveDependencie(this IServiceCollection services)
         {
             services.AddScoped<IAppIdentityUser, AppIdentityUser>();
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IComentarioRepository, ComentarioRepository>();
-            services.AddScoped<INotificador, Notificador>();
-
-
 
             return services;
         }

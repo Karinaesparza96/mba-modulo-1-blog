@@ -10,7 +10,6 @@ namespace BlogCore.Data.Repositories
         public async Task<Comentario?> ObterPorId(long id, long postId)
         {
             return await db.Comentarios
-                .AsNoTracking()
                 .Include(c => c.Usuario)
                 .Include(c => c.Post)
                 .ThenInclude(p => p!.Autor)
@@ -30,10 +29,8 @@ namespace BlogCore.Data.Repositories
         public async Task Adicionar(Comentario comentario)
         {
             var userId = userApp.GetUserId();
-            var user = await db.Users.FindAsync(userId);
 
-            comentario.Usuario = user;
-            comentario.Post = comentario.Post;
+            comentario.UsuarioId = userId;
 
             db.Comentarios.Add(comentario);
             await db.SaveChangesAsync();
