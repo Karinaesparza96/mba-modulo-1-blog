@@ -68,17 +68,17 @@ A estrutura do projeto é organizada da seguinte forma:
    - `git clone https://github.com/Karinaesparza96/mba-modulo-1-blog.git`
    - `cd mba-modulo-1-blog`
 
-2. **Configuração do Banco de Dados:**
+3. **Configuração do Banco de Dados:**
    - No arquivo `appsettings.json`, configure a string de conexão do SQL Server.
    - Rode o projeto para que a configuração do Seed crie o banco e popule com os dados básicos
 
-3. **Executar a Aplicação MVC:**
-   - `cd src/Blog.App/`
+4. **Executar a Aplicação MVC:**
+   - `cd src/BlogApp/`
    - `dotnet run`
-   - Acesse a aplicação em: http://localhost:5000
+   - Acesse a aplicação em: http://localhost:5009
 
-4. **Executar a API:**
-   - `cd src/Blog.Api/`
+5. **Executar a API:**
+   - `cd src/BlogApi/`
    - `dotnet run`
    - Acesse a documentação da API em: http://localhost:5001/swagger
 
