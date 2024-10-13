@@ -29,8 +29,10 @@ namespace BlogCore.Data.Repositories
         public async Task Adicionar(Comentario comentario)
         {
             var userId = userApp.GetUserId();
+            var usuario = await db.Users.FindAsync(userId);
 
             comentario.UsuarioId = userId;
+            comentario.Usuario = usuario;
 
             db.Comentarios.Add(comentario);
             await db.SaveChangesAsync();
