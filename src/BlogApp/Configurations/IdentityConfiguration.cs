@@ -7,7 +7,7 @@ namespace BlogApp.Configurations
     {
         public static IServiceCollection AddIdentity(this IServiceCollection services)
         {
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<IdentityUser>()
                      .AddEntityFrameworkStores<AppDbContext>();
             return services;
         }
