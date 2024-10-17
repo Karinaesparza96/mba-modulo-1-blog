@@ -12,13 +12,11 @@ builder.Services.AddIdentity();
 builder.Services.AddResolveDependencie();
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddControllers();
 
 builder.Services.AddAutoMapper(typeof(AutoMappingConfiguration).Assembly);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -33,6 +31,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
 app.UseAuthorization();
 

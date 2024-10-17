@@ -3,7 +3,7 @@
     ViewData["Title"] = "Error";
 }
 <div class="container mx-auto">
-    <h5 class="text-danger">@Model.Message</h5>
+    <h5 class="text-danger">@Model.Title - @Model.Message</h5>
     <div class="row">
         <a href="@Url.ActionLink("Index", "Home")">Voltar para inicio</a>
     </div>

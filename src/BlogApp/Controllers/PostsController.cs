@@ -11,15 +11,17 @@ namespace BlogApp.Controllers
     [Route("posts")]
     public class PostsController(IPostRepository postsRepository, 
                                 IMapper mapper,
-                                IAppIdentityUser userApp) : Controller
+                                IAppIdentityUser userApp) : BaseController(userApp)
     {
+        private readonly IAppIdentityUser _userApp = userApp;
+
         [HttpGet("")]
         public async Task<IActionResult> Index()
         {
             var posts = await postsRepository.ObterTodos();
             var postsViewModel = mapper.Map<IEnumerable<PostViewModel>>(posts);
 
-            postsViewModel.DefinirPermissoes(userApp);
+            postsViewModel.DefinirPermissoes(_userApp);
 
             return View(postsViewModel);
         }
@@ -35,7 +37,7 @@ namespace BlogApp.Controllers
             }
             
             var postViewModel = mapper.Map<PostViewModel>(post);
-            postViewModel.DefinirPermissao(userApp);
+            postViewModel.DefinirPermissao(_userApp);
 
             return View(postViewModel);
         }
@@ -69,15 +71,15 @@ namespace BlogApp.Controllers
                 return NotFound();
             }
 
-            var usuarioAutorizado = userApp.IsOwnerOrAdmin(post.Autor.UsuarioId);
+            var usuarioAutorizado = IsOwnerOrAdmin(post.Autor.UsuarioId);
 
             if (!usuarioAutorizado)
             {
-                return Forbid();
+                return RedirectPageErrorForbidden();
             }
 
             var postViewModel = mapper.Map<PostViewModel>(post);
-            postViewModel.DefinirPermissao(userApp);
+            postViewModel.DefinirPermissao(_userApp);
 
             return View(postViewModel);
         }
@@ -103,11 +105,11 @@ namespace BlogApp.Controllers
                 return NotFound();
             }
 
-            var usuarioAutorizado = userApp.IsOwnerOrAdmin(post.Autor.UsuarioId);
+            var usuarioAutorizado = IsOwnerOrAdmin(post.Autor.UsuarioId);
 
             if (!usuarioAutorizado)
             {
-                return Forbid();
+                return RedirectPageErrorForbidden();
             }
 
             post.Titulo = postViewModel.Titulo;
@@ -128,15 +130,15 @@ namespace BlogApp.Controllers
                 return NotFound();
             }
 
-            var usuarioAutorizado = userApp.IsOwnerOrAdmin(post.Autor.UsuarioId);
+            var usuarioAutorizado = IsOwnerOrAdmin(post.Autor.UsuarioId);
 
             if (!usuarioAutorizado)
             {
-                return Forbid();
+                return RedirectPageErrorForbidden();
             }
 
             var postViewModel = mapper.Map<PostViewModel>(post);
-            postViewModel.DefinirPermissao(userApp);
+            postViewModel.DefinirPermissao(_userApp);
 
             return View(postViewModel);
         }
@@ -151,11 +153,11 @@ namespace BlogApp.Controllers
             {
                 return NotFound();
             }
-            var usuarioAutorizado = userApp.IsOwnerOrAdmin(post.Autor.UsuarioId);
+            var usuarioAutorizado = IsOwnerOrAdmin(post.Autor.UsuarioId);
 
             if (!usuarioAutorizado)
             {
-                return Forbid();
+                return RedirectPageErrorForbidden();
             }
             await postsRepository.Remover(post);
 

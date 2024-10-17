@@ -9,15 +9,19 @@ public class ErrorController : Controller
     {
         var errorViewModel = new ErrorViewModel
         {
-            Title = "Erro",
-            Message = "Ocorreu um erro inesperado, tente novamente mais tarde ou contate nosso suporte",
+            Title = "Ops!",
+            Message = "Ocorreu um erro inesperado, tente novamente mais tarde ou contate nosso suporte.",
 
         };
 
         if (statusCode == 404)
         {
-            errorViewModel.Title = "Ops!";
-            errorViewModel.Message = "Não foi possível encontrar está pagina.";
+            errorViewModel.Message = "Não foi possível encontrar está página.";
+        }
+
+        if (statusCode == 403)
+        {
+            errorViewModel.Message = "Você não tem permissão para realizar esta operação.";
         }
 
         return View("Error", errorViewModel);

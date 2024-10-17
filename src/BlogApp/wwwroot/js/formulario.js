@@ -5,7 +5,7 @@
             window.location.href = '/Identity/Account/Login';
             break;
         case 403:
-            window.location.href = '/Identity/Account/AccessDenied';
+                window.location.href = `/Error/${403}`;
             break;
         case 404:
                 window.location.href = `/Error/${404}`;
