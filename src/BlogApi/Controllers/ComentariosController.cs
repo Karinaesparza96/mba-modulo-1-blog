@@ -1,6 +1,8 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using AutoMapper;
 using BlogApi.DTOs;
 using BlogCore.Business.Interfaces;
+using BlogCore.Business.Messages;
 using BlogCore.Business.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,14 +12,15 @@ namespace BlogApi.Controllers;
 [Route("api/posts/{postId:long}/comentarios")]
 public class ComentariosController(IComentarioRepository comentarioRepository, 
                                    IPostRepository postRepository,
-                                   IMapper mapper, IAppIdentityUser userApp) : ControllerBase
+                                   INotificador notificador,
+                                   IMapper mapper, IAppIdentityUser userApp) : BaseController(notificador)
 {
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ComentarioDto>>> ObterTodosPorPostId(long postId)
     {
         var comentarios = await comentarioRepository.ObterTodosPorPost(postId);
 
-        return Ok(mapper.Map<IEnumerable<ComentarioDto>>(comentarios));
+        return CustomResponse(HttpStatusCode.OK, mapper.Map<IEnumerable<ComentarioDto>>(comentarios));
     }
 
     [HttpGet("{id:long}")]
@@ -25,9 +28,13 @@ public class ComentariosController(IComentarioRepository comentarioRepository,
     {
         var comentario = await comentarioRepository.ObterPorId(id, postId);
 
-        if (comentario == null) return NotFound();
+        if (comentario == null)
+        {
+            NotificarErro(Messages.RegistroNaoEncontrado);
+            return CustomResponse();
+        }
 
-        return Ok(mapper.Map<ComentarioDto>(comentario));
+        return CustomResponse(HttpStatusCode.OK, mapper.Map<ComentarioDto>(comentario));
     }
 
     [Authorize]
@@ -36,21 +43,26 @@ public class ComentariosController(IComentarioRepository comentarioRepository,
     {
         if (postId != comentarioDto.PostId)
         {
-            return BadRequest();
+            NotificarErro(Messages.IdsDiferentes);
+            return CustomResponse();
         }
 
         if (!ModelState.IsValid)
         {
-            return ValidationProblem(ModelState);
+            return CustomResponse(ModelState);
         }
 
         var post = await postRepository.ObterPorId(postId);
 
-        if (post == null) return NotFound();
+        if (post == null)
+        {
+            NotificarErro(Messages.RegistroNaoEncontrado);
+            return CustomResponse();
+        }
 
         await comentarioRepository.Adicionar(mapper.Map<Comentario>(comentarioDto));
 
-        return Created();
+        return CustomResponse(HttpStatusCode.Created);
     }
 
     [Authorize]
@@ -59,26 +71,35 @@ public class ComentariosController(IComentarioRepository comentarioRepository,
     {
         if (postId != comentarioDto.PostId)
         {
-            return BadRequest();
+            NotificarErro(Messages.IdsDiferentes);
+            return CustomResponse();
         }
         if (!ModelState.IsValid)
         {
-            return ValidationProblem(ModelState);
+            return CustomResponse(ModelState);
         }
 
         var comentario = await comentarioRepository.ObterPorId(id, postId);
 
-        if (comentario == null) return NotFound();
+        if (comentario == null)
+        {
+            NotificarErro(Messages.RegistroNaoEncontrado);
+            return CustomResponse();
+        }
 
         var usuarioAutorizado = userApp.IsOwnerOrAdmin(comentario.Post?.Autor.UsuarioId);
 
-        if (!usuarioAutorizado) return Forbid();
+        if (!usuarioAutorizado)
+        {
+            NotificarErro(Messages.AcessoNaoAutorizado);
+            return CustomResponse();
+        }
 
         comentario.Conteudo = comentarioDto.Conteudo;
 
         await comentarioRepository.Atualizar(comentario);
 
-        return NoContent();
+        return CustomResponse(HttpStatusCode.NoContent);
     }
 
     [Authorize]
@@ -87,14 +108,22 @@ public class ComentariosController(IComentarioRepository comentarioRepository,
     {
         var comentario = await comentarioRepository.ObterPorId(id, postId);
 
-        if (comentario == null) return NotFound();
+        if (comentario == null)
+        {
+            NotificarErro(Messages.RegistroNaoEncontrado);
+            return CustomResponse();
+        }
 
         var usuarioAutorizado = userApp.IsOwnerOrAdmin(comentario.Post?.Autor.UsuarioId);
 
-        if (!usuarioAutorizado) return Forbid();
+        if (!usuarioAutorizado)
+        {
+            NotificarErro(Messages.AcessoNaoAutorizado);
+            return CustomResponse();
+        }
 
         await comentarioRepository.Remover(comentario);
 
-        return NoContent();
+        return CustomResponse(HttpStatusCode.NoContent);
     }
 }

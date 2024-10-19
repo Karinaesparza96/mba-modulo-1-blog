@@ -15,7 +15,7 @@ namespace BlogApp.Configurations
                 .ForMember(dest => dest.DataPublicacao, opt => opt.MapFrom(src => src.DataCadastro));
 
             CreateMap<Autor, AutorViewModel>()
-                .ForMember(dest => dest.Nome, opt => opt.MapFrom(src => src.Usuario!.UserName));
+                .ForMember(dest => dest.Nome, opt => opt.MapFrom(src => src.Usuario.UserName));
 
             CreateMap<ComentarioViewModel, Comentario>()
                 .ForMember(dest => dest.DataCadastro, opt => opt.MapFrom(src => src.DataPublicacao));

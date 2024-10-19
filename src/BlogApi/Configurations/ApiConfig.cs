@@ -4,7 +4,8 @@ public static class ApiConfig
 {
     public static WebApplicationBuilder AddApiConfig(this WebApplicationBuilder builder)
     {
-        builder.Services.AddControllers();
+        builder.Services.AddControllers()
+            .ConfigureApiBehaviorOptions(opt => opt.SuppressModelStateInvalidFilter = true);
         return builder;
     }
 }
