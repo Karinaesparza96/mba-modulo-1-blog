@@ -22,7 +22,7 @@ O projeto inclui:
   - ASP.NET Core MVC
   - ASP.NET Core Web API
   - Entity Framework Core
-- **💽 Banco de Dados:** SQLite
+- **💾 Banco de Dados:** SQLite
 - **🔐 Autenticação e Autorização:**
   - ASP.NET Core Identity
   - JWT (JSON Web Token) para autenticação na API
@@ -40,9 +40,9 @@ src/
   ├── Blog.App/          # Projeto MVC
   ├── Blog.Api/          # API RESTful
   ├── Blog.Core/         # Modelos de Dados, Interfaces e Configuração do EF Core
-README.md                 # Arquivo de Documentação do Projeto
-FEEDBACK.md               # Arquivo para Consolidação dos Feedbacks
-.gitignore                # Arquivo de Ignoração do Git
+README.md                # Arquivo de Documentação do Projeto
+FEEDBACK.md              # Arquivo para Consolidação dos Feedbacks
+.gitignore               # Arquivo de Ignoração do Git
 ```
 
 ## **5. Funcionalidades Implementadas**
