@@ -40,9 +40,9 @@ src/
   ├── BlogApp/          # Projeto MVC
   ├── BlogApi/          # API RESTful
   ├── BlogCore/         # Modelos de Dados, Interfaces e Configuração do EF Core
-README.md                # Arquivo de Documentação do Projeto
-FEEDBACK.md              # Arquivo para Consolidação dos Feedbacks
-.gitignore               # Arquivo de Ignoração do Git
+README.md               # Arquivo de Documentação do Projeto
+FEEDBACK.md             # Arquivo para Consolidação dos Feedbacks
+.gitignore              # Arquivo de Ignoração do Git
 ```
 
 ## **5. Funcionalidades Implementadas**
