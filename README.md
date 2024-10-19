@@ -37,9 +37,9 @@ A estrutura do projeto é organizada da seguinte forma:
 
 ```
 src/
-  ├── Blog.App/          # Projeto MVC
-  ├── Blog.Api/          # API RESTful
-  ├── Blog.Core/         # Modelos de Dados, Interfaces e Configuração do EF Core
+  ├── BlogApp/          # Projeto MVC
+  ├── BlogApi/          # API RESTful
+  ├── BlogCore/         # Modelos de Dados, Interfaces e Configuração do EF Core
 README.md                # Arquivo de Documentação do Projeto
 FEEDBACK.md              # Arquivo para Consolidação dos Feedbacks
 .gitignore               # Arquivo de Ignoração do Git
