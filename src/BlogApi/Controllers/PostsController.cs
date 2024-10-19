@@ -1,6 +1,8 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using AutoMapper;
 using BlogApi.DTOs;
 using BlogCore.Business.Interfaces;
+using BlogCore.Business.Messages;
 using BlogCore.Business.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +13,8 @@ namespace BlogApi.Controllers
     [Route("api/posts")]
     public class PostsController(IPostRepository postsRepository, 
                                 IMapper mapper, 
-                                IAppIdentityUser userApp) : ControllerBase
+                                INotificador notificador,
+                                IAppIdentityUser userApp) : BaseController(notificador)
     {
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PostDto>>> ObterTodos()
@@ -26,11 +29,12 @@ namespace BlogApi.Controllers
             var post = await postsRepository.ObterPorId(id);
 
             if (post == null)
-            {
-                return NotFound();
+            {   
+                NotificarErro(Messages.RegistroNaoEncontrado);
+                return CustomResponse();
             }
 
-            return Ok(mapper.Map<PostDto>(post));
+            return CustomResponse(HttpStatusCode.OK, mapper.Map<PostDto>(post));
         }
 
         [Authorize]
@@ -39,12 +43,12 @@ namespace BlogApi.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return ValidationProblem(ModelState);
+                return CustomResponse(ModelState);
             }
 
             await postsRepository.Adicionar(mapper.Map<Post>(postDto));
 
-            return Created();
+            return CustomResponse(HttpStatusCode.Created);
         }
 
         [Authorize]
@@ -53,26 +57,29 @@ namespace BlogApi.Controllers
         {
             if (id != postDto.Id)
             {
-                return BadRequest();
+                NotificarErro(Messages.IdsDiferentes);
+                return CustomResponse();
             }
 
             if (!ModelState.IsValid)
             {
-                return ValidationProblem(ModelState);
+                return CustomResponse(ModelState);
             }
 
             var post = await postsRepository.ObterPorId(id);
 
             if (post == null)
-            {
-                return NotFound();
+            {   
+                NotificarErro(Messages.RegistroNaoEncontrado);
+                return CustomResponse();
             }
 
             var usuarioAutorizado = userApp.IsOwnerOrAdmin(post.Autor.UsuarioId);
 
             if (!usuarioAutorizado)
-            {
-                return Forbid();
+            {   
+                NotificarErro(Messages.AcessoNaoAutorizado);
+                return CustomResponse();
             }
 
             post.Titulo = postDto.Titulo;
@@ -80,7 +87,7 @@ namespace BlogApi.Controllers
 
             await postsRepository.Atualizar(post);
 
-            return NoContent();
+            return CustomResponse(HttpStatusCode.NoContent);
         }
 
         [Authorize]
@@ -91,17 +98,19 @@ namespace BlogApi.Controllers
 
             if (post == null)
             {
-                return NotFound();
+                NotificarErro(Messages.RegistroNaoEncontrado);
+                return CustomResponse();
             }
             var usuarioAutorizado = userApp.IsOwnerOrAdmin(post.Autor.UsuarioId);
 
             if (!usuarioAutorizado)
             {
-                return Forbid();
+                NotificarErro(Messages.AcessoNaoAutorizado);
+                return CustomResponse();
             }
             await postsRepository.Remover(post);
 
-            return NoContent();
+            return CustomResponse(HttpStatusCode.NoContent);
         }
     }
 }

@@ -17,8 +17,7 @@ public class AutoMappingConfiguration : Profile
             .ForMember(dest => dest.DataPublicacao, opt => opt.MapFrom(src => src.DataCadastro));
 
         CreateMap<Autor, AutorDto>()
-            .ForMember(dest => dest.NomeUsuario, opt => opt.MapFrom(src => 
-                src.Usuario.UserName));
+            .ForMember(dest => dest.NomeUsuario, opt => opt.MapFrom(src => src.Usuario.UserName));
 
         CreateMap<AutorDto, Autor>();
 
@@ -26,7 +25,7 @@ public class AutoMappingConfiguration : Profile
             .ForMember(dest => dest.DataCadastro, opt => opt.MapFrom(src => src.DataPublicacao));
 
         CreateMap<Comentario, ComentarioDto>()
-            .ForMember(dest => dest.NomeUsuario, opt => opt.MapFrom(src => src.Usuario!.UserName))
+            .ForMember(dest => dest.NomeUsuario, opt => opt.MapFrom(src => src.Usuario.UserName))
             .ForMember(dest => dest.DataPublicacao, opt => opt.MapFrom(src => src.DataCadastro));
     }
 }

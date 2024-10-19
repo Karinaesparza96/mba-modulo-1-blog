@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BlogApp.ViewsModels;
 using BlogCore.Business.Interfaces;
-using BlogCore.Business.Messages;
 using BlogCore.Business.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -89,8 +88,7 @@ namespace BlogApp.Controllers
         {
             if (id != postViewModel.Id)
             {
-                ModelState.AddModelError("", Messages.IdsDiferentes);
-                return View(postViewModel);
+                return NotFound();
             }
 
             if (!ModelState.IsValid)

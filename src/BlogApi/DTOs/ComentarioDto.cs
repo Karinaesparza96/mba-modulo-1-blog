@@ -6,7 +6,6 @@ public class ComentarioDto
 {
     public long Id { get; set; }
     public string? NomeUsuario { get; set; }
-    public string? UsuarioId { get; set; }
 
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     public long PostId { get; set; }

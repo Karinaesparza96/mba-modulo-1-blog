@@ -1,4 +1,5 @@
 ﻿using BlogApp.ViewsModels;
+using BlogCore.Business.Messages;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogApp.Controllers;
@@ -10,18 +11,18 @@ public class ErrorController : Controller
         var errorViewModel = new ErrorViewModel
         {
             Title = "Ops!",
-            Message = "Ocorreu um erro inesperado, tente novamente mais tarde ou contate nosso suporte.",
+            Message = Messages.BadRequestGeneric,
 
         };
 
         if (statusCode == 404)
         {
-            errorViewModel.Message = "Não foi possível encontrar está página.";
+            errorViewModel.Message = Messages.RegistroNaoEncontrado;
         }
 
         if (statusCode == 403)
         {
-            errorViewModel.Message = "Você não tem permissão para realizar esta operação.";
+            errorViewModel.Message = Messages.AcessoNaoAutorizado;
         }
 
         return View("Error", errorViewModel);

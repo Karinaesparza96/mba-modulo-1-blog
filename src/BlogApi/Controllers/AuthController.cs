@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
+using BlogCore.Business.Interfaces;
 using BlogCore.Business.Messages;
 
 namespace BlogApi.Controllers;
@@ -15,12 +17,13 @@ namespace BlogApi.Controllers;
 [Route("api/conta")]
 public class AuthController(SignInManager<IdentityUser> signInManager,
                             UserManager<IdentityUser> userManager,
-                            IOptions<JwtSettings> jwtSettings) : ControllerBase
+                            INotificador notificador,
+                            IOptions<JwtSettings> jwtSettings) : BaseController(notificador)
 {
     [HttpPost("registrar")]
     public async Task<ActionResult> Registrar(RegisterUserDto registerUser)
     {
-        if (!ModelState.IsValid) return ValidationProblem(ModelState);
+        if (!ModelState.IsValid) return CustomResponse(ModelState);
 
         var user = new IdentityUser
         {
@@ -34,25 +37,27 @@ public class AuthController(SignInManager<IdentityUser> signInManager,
         if (result.Succeeded)
         {
             await signInManager.SignInAsync(user, false);
-            return Ok(await GerarJwt(user.Email!));
+            return CustomResponse(HttpStatusCode.OK, await GerarJwt(user.Email!));
         }
 
-        return Problem(Messages.FalhaRegistrarUsuario);
+        NotificarErro(Messages.FalhaRegistrarUsuario);
+        return CustomResponse();
     }
 
     [HttpPost("login")]
     public async Task<ActionResult> Login(LoginUserDto loginUser)
     {
-        if (!ModelState.IsValid) return ValidationProblem(ModelState);
+        if (!ModelState.IsValid) return CustomResponse(ModelState);
 
         var result = await signInManager.PasswordSignInAsync(loginUser.Email!, loginUser.Password!, false, true);
         
         if (result.Succeeded)
         {
-            return Ok(await GerarJwt(loginUser.Email!));
+            return CustomResponse(HttpStatusCode.OK, await GerarJwt(loginUser.Email!));
         }
 
-        return Problem(Messages.UsuarioOuSenhaIncorretos);
+        NotificarErro(Messages.UsuarioOuSenhaIncorretos);
+        return CustomResponse();
     }
 
     private async Task<string> GerarJwt(string email)
