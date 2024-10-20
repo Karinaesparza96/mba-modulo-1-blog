@@ -34,7 +34,7 @@ namespace BlogApp.Controllers
             return PartialView("_ComentarioFormPartial", comentarioViewModel);
         }
 
-        [Authorize, HttpPost("novo")]
+        [Authorize, HttpPost("novo"), ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ComentarioViewModel comentarioViewModel, long postId)
         {
             if (!ModelState.IsValid)
