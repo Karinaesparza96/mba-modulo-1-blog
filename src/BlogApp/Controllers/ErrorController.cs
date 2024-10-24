@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BlogApp.Controllers;
 public class ErrorController : Controller
 {
-    [Route("Error/{statusCode?}")]
+    [Route("erro/{statusCode?}")]
     public IActionResult Index(int? statusCode)
     {
         var errorViewModel = new ErrorViewModel

@@ -5,13 +5,13 @@
             window.location.href = '/Identity/Account/Login';
             break;
         case 403:
-                window.location.href = `/Error/${403}`;
+                window.location.href = `/erro/${403}`;
             break;
         case 404:
-                window.location.href = `/Error/${404}`;
+                window.location.href = `/erro/${404}`;
             break;
         default:
-            window.location.href = '/Error/';
+            window.location.href = '/erro/';
         }
     }
 

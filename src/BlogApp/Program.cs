@@ -18,12 +18,13 @@ builder.Services.AddAutoMapper(typeof(AutoMappingConfiguration).Assembly);
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
-{
+{   
+    app.UseDeveloperExceptionPage();
     app.UseMigrationsEndPoint();
 }
 else
 {
-    app.UseExceptionHandler("/Error");
+    app.UseExceptionHandler("/erro");
     app.UseHsts();
 }
 
@@ -32,7 +33,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseStatusCodePagesWithReExecute("/Error/{0}");
+app.UseStatusCodePagesWithReExecute("/erro/{0}");
 
 app.UseAuthorization();
 
