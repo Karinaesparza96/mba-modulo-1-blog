@@ -55,7 +55,6 @@ FEEDBACK.md             # Arquivo para Consolidação dos Feedbacks
 
 ### **Pré-requisitos**
 - .NET SDK 8.0 ou superior
-- SQL Server
 - Visual Studio 2022 ou superior (ou qualquer IDE de sua preferência)
 - Git
 
